@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"go-aora-api/internal/database"
 	"go-aora-api/internal/server"
 )
 
 func main() {
 	fmt.Println("Running go aora api.")
+
+	database.Connect();
 
 	server := server.NewServer()
 
