@@ -1,8 +1,12 @@
 package repository
 
 import (
+	"errors"
+	"fmt"
 	"go-aora-api/internal/database"
 	"go-aora-api/internal/models"
+
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {}
@@ -25,11 +29,47 @@ func (repo *UserRepository) Create(data CreateData) models.User {
 	return user;
 }
 
-func (repo *UserRepository) FindById(id int) models.User {
+type UpdateData struct {
+	Name	*string
+	Email 	*string
+	Avatar	*string
+}
+
+func (repo *UserRepository) Update(id int, data UpdateData) (models.User, error) {
+	user, err := repo.FindById(id);
+
+	if err != nil {
+		return models.User{}, err
+	}
+
+	if data.Name != nil {
+		user.Name = *data.Name
+	}
+
+	if data.Email != nil {
+		user.Email = *data.Email
+	}
+
+	if data.Avatar != nil {
+		user.Avatar = *data.Avatar
+	}
+
+	database.DB.Save(&user)
+	return models.User{}, nil
+}
+
+func (repo *UserRepository) FindById(id int) (models.User, error) {
 	user := models.User{ID: uint(id)}
 
-	database.DB.First(&user)
-	return user;
+	result := database.DB.First(&user)
+	if result.Error != nil {
+        if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+            return models.User{}, fmt.Errorf("test with ID %d not found", id)
+        }
+        return models.User{}, result.Error
+    }
+
+	return user, nil;
 }
 
 
