@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"go-aora-api/internal/handlers"
 	"go-aora-api/pkg/jwt"
 	"net/http"
 	"strings"
@@ -16,9 +17,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/", s.HelloWorldHandler)
 	r.POST("/verify", s.VerifyToken)
 
-	// apiGroup := r.Group("/api")
+	apiGroup := r.Group("/api")
 	// apiGroup.Use(middleware.AuthMiddleware()) 
-	// handlers.UserRoutes(apiGroup)
+	handlers.AuthRoutes(apiGroup)
 	// handlers.TestRoutes(apiGroup)
 
 	return r
