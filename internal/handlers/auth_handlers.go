@@ -4,13 +4,12 @@ import (
 	"go-aora-api/internal/handlers/requests"
 	"go-aora-api/internal/repository"
 	"go-aora-api/internal/services"
+	"go-aora-api/internal/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
-var validate = validator.New()
 
 type AuthHandler struct {
 	authService *services.AuthService
@@ -30,7 +29,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	}
 
 
-	if err := validate.Struct(inputs); err != nil {
+	if err := utils.ValidateStruct(inputs); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -60,7 +59,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if err := validate.Struct(inputs); err != nil {
+	if err := utils.ValidateStruct(inputs); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
