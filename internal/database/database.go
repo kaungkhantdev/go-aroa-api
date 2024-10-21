@@ -37,7 +37,8 @@ func Connect() {
     log.Println("Successfully connected to the database.")
 
     // Run AutoMigrate
-    if err := DB.AutoMigrate(&models.User{}); err != nil {
+    autoMigrateDB := DB.AutoMigrate(&models.User{}, &models.Aora{});
+    if err := autoMigrateDB; err != nil {
         log.Fatalf("Failed to auto-migrate: %v", err)
     }
 
