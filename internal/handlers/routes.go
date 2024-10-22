@@ -27,4 +27,7 @@ func AoraRoutes(router *gin.RouterGroup) {
 	aoraHandler := NewAoraHandler(aoraService)
 
 	router.POST("/aoras", aoraHandler.CreateAoraHandler)
+	router.GET("/aoras/:id", aoraHandler.FindById)
+	router.GET("/aoras", aoraHandler.FindAllAora)
+	router.PATCH("/aoras/:id", aoraHandler.UpdateAora)
 }
