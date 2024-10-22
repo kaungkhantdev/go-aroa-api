@@ -17,6 +17,10 @@ func (s *AoraService) CreateAoraService(data repository.CreateAoraData) (models.
 	return s.repo.CreateAora(data);
 }
 
+func (s *AoraService) UpdateAoraService(id int, data repository.UpdateDataAora) (models.Aora, error) {
+	return s.repo.UpdateAora(id, data);
+}
+
 func (s *AoraService) FindByIdAoraService(id int) (models.Aora, error) {
 	return s.repo.FindByIdAora(id)
 }
