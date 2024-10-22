@@ -22,6 +22,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	handlers.AuthRoutes(apiGroup)
 	// handlers.TestRoutes(apiGroup)
 
+	/** AORA ROUTES */
+	handlers.AoraRoutes(apiGroup)
+
 	return r
 }
 

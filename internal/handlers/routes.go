@@ -18,3 +18,13 @@ func AuthRoutes(router *gin.RouterGroup) {
 	router.POST("/login", authHandler.Login)
 	router.POST("/register", authHandler.Register)
 }
+
+func AoraRoutes(router *gin.RouterGroup) {
+	
+	aoraRepo := &repository.AoraRepository{}
+	aoraService := services.NewAoraService(aoraRepo)
+	
+	aoraHandler := NewAoraHandler(aoraService)
+
+	router.POST("/aoras", aoraHandler.CreateAoraHandler)
+}
