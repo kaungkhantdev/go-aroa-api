@@ -93,5 +93,5 @@ func (repo *AoraRepository) UpdateAora(id int, data UpdateDataAora) (models.Aora
 	}
 
 	database.DB.Save(&aora)
-	return models.Aora{}, nil
+	return aora, nil
 }
