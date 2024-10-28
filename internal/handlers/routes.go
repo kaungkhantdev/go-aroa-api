@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"go-aora-api/internal/middleware"
 	"go-aora-api/internal/repository"
 	"go-aora-api/internal/services"
 
@@ -26,8 +27,11 @@ func AoraRoutes(router *gin.RouterGroup) {
 	
 	aoraHandler := NewAoraHandler(aoraService)
 
-	router.POST("/aoras", aoraHandler.CreateAoraHandler)
-	router.GET("/aoras/:id", aoraHandler.FindById)
-	router.GET("/aoras", aoraHandler.FindAllAora)
-	router.PATCH("/aoras/:id", aoraHandler.UpdateAora)
+	aoraGroup := router.Group("aoras")
+	aoraGroup.Use(middleware.AuthMiddleware())
+
+	aoraGroup.POST("", aoraHandler.CreateAoraHandler)
+	aoraGroup.GET("/:id", aoraHandler.FindById)
+	aoraGroup.GET("", aoraHandler.FindAllAora)
+	aoraGroup.PATCH("/:id", aoraHandler.UpdateAora)
 }
