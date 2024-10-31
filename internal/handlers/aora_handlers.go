@@ -25,12 +25,12 @@ func (h *AoraHandler) CreateAoraHandler(c *gin.Context) {
 	var inputs requests.AoraCreateRequest
 
 	if err := c.ShouldBindBodyWithJSON(&inputs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		utils.ErrorResponse(c, "Invalid input", http.StatusBadRequest)
         return
 	}
 
 	if err := utils.ValidateStruct(inputs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -45,11 +45,11 @@ func (h *AoraHandler) CreateAoraHandler(c *gin.Context) {
 
 	aoraCreated, err := h.aoraService.CreateAoraService(aora)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation failed"})
+		utils.ErrorResponse(c, "creation failed", http.StatusBadRequest)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{ "aroa": aoraCreated })
+	utils.SuccessResponse(c, aoraCreated,"Success", http.StatusCreated)
 	return
 }
 
@@ -57,23 +57,22 @@ func (h *AoraHandler) FindById(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		utils.ErrorResponse(c, "Invalid input", http.StatusBadRequest)
 		return
 	}
 
 	aora, err := h.aoraService.FindByIdAoraService(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Not found"})
+		utils.ErrorResponse(c, "Not found", http.StatusBadRequest)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{ "aroa": aora })
-	return
+	utils.SuccessResponse(c, aora,"Success", http.StatusCreated)
 }
 
 func (h *AoraHandler) FindAllAora(c *gin.Context) {
 	aoras := h.aoraService.FindAllAoraService()
-	c.JSON(http.StatusOK, gin.H{ "aroas": aoras })
+	utils.SuccessResponse(c, aoras,"Success", http.StatusCreated)
 	return
 }
 
@@ -82,13 +81,13 @@ func (h *AoraHandler) UpdateAora(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		utils.ErrorResponse(c, "Invalid id", http.StatusBadRequest)
 		return
 	}
 
 	inputs := models.Aora{}
 	if err := c.ShouldBindJSON(&inputs); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+        utils.ErrorResponse(c, "Invalid inputs", http.StatusBadRequest)
         return
     }
 
@@ -114,10 +113,10 @@ func (h *AoraHandler) UpdateAora(c *gin.Context) {
 
 	aora, err := h.aoraService.UpdateAoraService(id, data)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Something wrong"})
+		utils.ErrorResponse(c, "Something wrong", http.StatusBadRequest)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{ "data": aora })
+	utils.SuccessResponse(c, aora,"Success", http.StatusCreated)
 
 }

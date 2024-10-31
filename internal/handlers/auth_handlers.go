@@ -24,13 +24,13 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	var inputs requests.AuthRegisterRequest
 
 	if err := c.ShouldBindBodyWithJSON(&inputs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		utils.ErrorResponse(c, "Invalid input", http.StatusBadRequest)
         return
 	}
 
 
 	if err := utils.ValidateStruct(inputs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -43,11 +43,11 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	token, err := h.authService.Register(user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Registration failed"})
+		utils.ErrorResponse(c, "Registration failed", http.StatusBadRequest)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Registration successful", "token": token})
+	utils.SuccessResponse(c, token,"Registration successful", http.StatusOK)
 
 }
 
@@ -55,12 +55,12 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	var inputs requests.AuthLoginRequest
 
 	if err := c.ShouldBindBodyWithJSON(&inputs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		utils.ErrorResponse(c, "Invalid input", http.StatusBadRequest)
 		return
 	}
 
 	if err := utils.ValidateStruct(inputs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.ErrorResponse(c, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -71,9 +71,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	token, err := h.authService.Login(user)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email or password"})
+		utils.ErrorResponse(c, "Invalid email or password", http.StatusBadRequest)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "user": token})
+	utils.SuccessResponse(c, token,"Login successful", http.StatusOK)
 }
